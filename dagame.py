@@ -10,7 +10,7 @@ myapp_path = os.path.join(appdata_path, 'sillycraft')
 os.makedirs(myapp_path, exist_ok=True)
 
 #То ли тюнебл переменные, то ли что-то другое, хз
-h, w = 100, 100 # h = x, w = y
+h, w = 1000, 1000 # h = x, w = y
 debug, slowmode = False, False
 materialtiles = ['s', 'wd', 't', '`']
 setpieceblockingtiles = ['s', 'w', 'wd']
@@ -21,7 +21,7 @@ s = h*w
 #Пустышки
 ch1, cw1 = 0, 0
 ch2, cw2 = 0, 0
-i3,i4,i5,i6 = 0, 0, 0, 0
+i3,i4,i5,i6 = 0, 0, 0, 0 #не знаю зачем они, но страшно убирать
 tilecolortext = ''
 CurrentWorld = ''
 generated = 0
@@ -40,6 +40,7 @@ def savethedata():
 			f'{seed}']
 			)
 	print(f'{char[0]} {char[1]}')
+
 def worldgen_Overworld():
 	global Overworld; global char
 	Overworld = [['d' for x in range(w)] for y in range(h)]
@@ -52,8 +53,9 @@ def worldgen_Overworld():
 	worldgen_lilbitstone(Overworld)
 	worldgen_trees(Overworld)
 	worldgen_setpieces(Overworld)
+
 def worldgen_grass(World):
-	print('генерация травы...')
+	print('Генерация травы...')
 	for _ in range(s//3*2):
 		(World)[random.randint(0,h-1)][random.randint(0,w-1)] = "gs"
 	for i2 in range(w-1):
@@ -73,8 +75,9 @@ def worldgen_grass(World):
 			if World[i3][i4] == "gs": (World)[i1][i2] = "g"
 			if World[i3][i2] == "gs": (World)[i1][i2] = "g"
 			if World[i1][i2] == "gs": (World)[i1][i2] = "g"
+
 def worldgen_cleandirt(World):
-	print('уборка лишней земли...')
+	print('Уборка лишней земли...')
 	for i2 in range(w-1):
 		for i1 in range(h-1):
 			if i1 < h: i3 = i1 + 1
@@ -82,8 +85,9 @@ def worldgen_cleandirt(World):
 			if i1 > 0: i4 = i1 - 1
 			else: i4 = i1
 			if World[i3][i2] == "g" and World[i4][i2] == "g" and random.randint(1,2) == 1: World[i1][i2] = "g"
+
 def worldgen_voidborders(World):
-	print('превращение земли на краях мира в камень')
+	print('Расклачивание углов карты...')
 	for i2 in range(w):
 		for i1 in range(h):
 			if i1 < 2 or i2 < 2 or i1 >= h-2 or i2 >= w-2:
@@ -100,10 +104,11 @@ def worldgen_voidborders(World):
 			elif i2 == w-2:
 				if random.randint(1, 2) == 1:
 					if World[i1][i2+1] == "`": World[i1][i2] = "`"
+
 def worldgen_lilbitstone(World):
-	print('генерация камней...')
+	print('Генерация камней...')
 	for _ in range(s//1000*1):
-		(World)[random.randint(0,h-1)][random.randint(0,w-1)] = "d"
+		(World)[random.randint(0,h-1)][random.randint(0,w-1)] = "s"
 
 def worldgen_trees(World):
 	print('генерация деревьев...')
@@ -118,19 +123,22 @@ def worldgen_trees(World):
 					treespawnchance = random.randint(1,10)
 				elif treespawnchance > 3: treespawnchance += random.randint(-3,3)
 				else: treespawnchance = 5
+
 def worldgen_setpieces(World):
 	print('Генерация структур...')
 	worldgen_setpiece_1(World, 10, False)
 	worldgen_setpiece_2(World, 3, False)
 	worldgen_setpiece_3(World, 5, False)
 	worldgen_setpiece_3(World, 1, False)
+	worldgen_setpiece_4(World, 1, False)
+
 def woldgen_place_setpieces(World, needed, forced, setpiece):
 	generated = 0
 	while generated < needed:
 		blocked = True
 		for _ in range(1000):
 			blocked = False
-			#spg = setpiece_generator
+			#spg это setpiece_generator
 			spg1 = random.randint(40,h-len(setpiece[0]))
 			spg2 = random.randint(20,w-len(setpiece))
 			for i2 in range(spg1, spg1+len(setpiece[0])):
@@ -142,6 +150,7 @@ def woldgen_place_setpieces(World, needed, forced, setpiece):
 				for i2 in range(len(setpiece[i1])):
 					if not (setpiece[i1][i2] == ' '): World[spg1+i2-1][spg2+i1-1] = setpiece[i1][i2]
 		generated += 1
+
 def worldgen_setpiece_1(World, needed, forced):
 	setpiece = [[' ', ' ', 'w', 'w', 'w', ' ', ' '],
 			 	[' ', 'w', 'wd','wd','wd','w', ' '],
@@ -151,6 +160,7 @@ def worldgen_setpiece_1(World, needed, forced):
 				[' ', 'w', 'wd','wd','wd','w', ' '],
 				[' ', ' ', 'w', 'w', 'w', ' ', ' ']]
 	woldgen_place_setpieces(World, needed, forced, setpiece)
+
 def worldgen_setpiece_2(World, needed, forced):
 	setpiece = [[' ', ' ', 'd', 'd', 'd', ' ', ' '],
 			 	[' ', 'd', 's', 's', 's', 'd', ' '],
@@ -160,6 +170,7 @@ def worldgen_setpiece_2(World, needed, forced):
 				[' ', 'd', 's', 's', 's', 'd', ' '],
 				[' ', ' ', 'd', 'd', 'd', ' ', ' ']]
 	woldgen_place_setpieces(World, needed, forced, setpiece)
+
 def worldgen_setpiece_3(World, needed, forced):
 	setpiece = [[' ', ' ', 'd', 'd', 'd', ' ', ' '],
 			 	[' ', 'd', 'd', 'd', 'd', 'd', ' '],
@@ -169,6 +180,7 @@ def worldgen_setpiece_3(World, needed, forced):
 				[' ', 'd', 'd', 'd', 'd', 'd', ' '],
 				[' ', ' ', 'd', 'd', 'd', ' ', ' ']]
 	woldgen_place_setpieces(World, needed, forced, setpiece)
+
 def worldgen_setpiece_4(World, needed, forced):
 	setpiece = [['s', 's', 's', 's', 's', 's', 's', 's', 's', 's'],
 			 	['s', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd'],
